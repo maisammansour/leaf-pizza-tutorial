@@ -1,47 +1,35 @@
 ![alt](/logo.png)
 
-I am a user who wants to order pizza
+## Main user story
 
-I go to the API and order my pizza, providing the following fields:
+I am a user who wants to order pizza.
 
-1. I can only order 1 pizza
-    a. A pizza can have 1 or more toppings
-    b. A pizza has a type (e.g. margherita, pepperoni, bianca, etc.)
-    c. A pizza has a size (e.g. small, medium, large, etc.)
-    d. An address (Assume US addresses)
-2. I can also supplement the order with an array of drinks
+I would like an API that allows me to order pizza.
+I should be able to order at most 1 pizza per order.
+A pizza has a type (e.g. margherita, pepperoni, bianca, etc.), a size (e.g. small, medium, large) and an assortment of toppings.
+I am able to order as many drinks as I want within my order.
+I also must supply a valid US address within the order.
 
-The address I input should be validated against the Google Address Validation API (The owner would prefer that no external Google libraries are used due to licensing issues) that validates addresses. If the address is invalid, the order should be rejected. The documentation can be found here: https://developers.google.com/maps/documentation/address-validation/requests-validate-address
+The address I input should be validated against the Google Address Validation API (The owner would prefer that no external Google libraries are used due to licensing issues) that validates addresses. If the address is invalid, the order should be rejected. The documentation can be found [here](https://developers.google.com/maps/documentation/address-validation/requests-validate-address) (The owner will provide an API key for the Google Address Validation API.)
 
-The owner will provide an API key for the Google Address Validation API.
+I go to the API and order my pizza. Once I have ordered my pizza, I will receive an immediate order confirmation containing the new order's ID, as well as the pizza and any drinks I may have ordered.
 
-Once I have ordered my pizza, I will receive an immediate response with the following fields:
+I can then go to the API and check the status of my order given the order ID. I and others like me will make a lot of requests, so the API should be cached so that I can **reliably** check the status of my order without having to hit the database every time.
 
-```
-Order ID
-Order Status (e.g. pending, processing, pending delivery, delivered)
-Pizza {
-    Type
-    Size
-    Toppings
-}
-Drinks [
-    "Drink 1",
-    "Drink 2",
-    "Drink 3"
-]
-```
-
-I can then go to the API and check the status of my order given the order ID. The API should be cached so that I can check the status of my order without having to hit the database. (Caching should know when to evict the relevant order)
-
-Once the order is in the system, a scheduled job will run every few seconds to fetch all pending orders and process them. Only one job should run at a time, to avoid duplicate processing. The restaurant only has a set amount of employees who can make pizzas at any given time and they can also handle the orders concurrently, but only up to the amount of employees. The processing of the order should take 5-10 seconds.
+Once the order is in the system, a scheduled job will run every few seconds to fetch all pending orders and process them. **Only one job should run at a time**, to avoid duplicate processing. The restaurant only has a set amount of employees who can make pizzas at any given time and they can also handle the orders concurrently, but only up to the amount of employees. The processing of the order should take between 5-10 seconds.
 
 Once the order has started processing, the status of the order should be updated to "processing". Once the order has finished processing, the status of the order should be updated to "pending delivery".
 
-Once the order has been processed, a scheduled job will run every few seconds to fetch all orders that are pending delivery and deliver them. This scheduled job should be inside of a lock/mutex and only one should run at a time, to avoid duplicate delivery. The delivery company only has a set amount of delivery drivers at any given time and they can also handle the orders concurrently, but only up to the amount of employees. The delivery of the order should take a random amount of time between 5 and 10 seconds.
+Once the order has been processed, a scheduled job will run every few seconds to fetch all orders that are pending delivery and deliver them. **Only one job should run at a time**, to avoid duplicate delivery. The delivery company only has a set amount of delivery drivers at any given time and they can also handle the orders concurrently, but only up to the amount of drivers currently available. The delivery of the order should take a random amount of time between 5 and 10 seconds.
 
-Allow configuration of the number of employees and the number of delivery drivers.
 
 Once the order has started delivery, the status of the order should be updated to "delivering". Once the order has finished delivery, the status of the order should be updated to "delivered".
 
-The application should be thoroughly unit and integration tested.
+## Administrator user story
+
+I would like to be able to configure the amount of employees and delivery drivers. 
+
+
+## Notes
+
+The application should be unit and integration tested.
