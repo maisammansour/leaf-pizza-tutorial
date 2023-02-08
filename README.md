@@ -1,3 +1,5 @@
+![alt](/logo.png)
+
 I am a user who wants to order pizza
 
 I go to the API and order my pizza, providing the following fields:
