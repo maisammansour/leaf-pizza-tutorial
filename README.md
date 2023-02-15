@@ -24,8 +24,7 @@ Once the order has started processing, the status of the order should be updated
 
 ## Administrator user story
 
-I would like to be able to configure the amount of employees and delivery drivers. 
-
+I would like to be able to configure the amount of employees.
 
 ## Notes
 
